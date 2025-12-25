@@ -11,16 +11,15 @@ function Home() {
         <h2 className="text-2xl font-bold mb-4">
           Welcome to your Pomodoro Session
         </h2>
-        <p className="text-gray-600">
-          Timer coming next 👀
-        </p>
+
       </main>
+      <div className="min-h-screen flex items-center justify-center">
       <Timer />
+    </div>
       <Controls />
       <TaskList />
     </>
   );
 }
-
 
 export default Home;
