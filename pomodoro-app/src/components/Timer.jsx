@@ -103,4 +103,4 @@ const handleSessionEnd = () => {
   );
 }
 
-export default Timer;
+export default Timer(MODES, timeLeft, isRunning, focusCount, setMode, setTimeLeft, setIsRunning, setFocusCount);
