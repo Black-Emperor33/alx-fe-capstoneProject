@@ -5,13 +5,22 @@ import TaskList from "../components/TaskList";
 
 function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center px-4">
+    <>
       <Header />
+      <main className="p-6 text-center">
+        <h2 className="text-2xl font-bold mb-4">
+          Welcome to your Pomodoro Session
+        </h2>
+        <p className="text-gray-600">
+          Timer coming next 👀
+        </p>
+      </main>
       <Timer />
       <Controls />
       <TaskList />
-    </main>
+    </>
   );
 }
+
 
 export default Home;
