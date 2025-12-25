@@ -1,32 +1,57 @@
 import { useEffect, useState } from "react";
 
-const FOCUS_TIME = 25 * 60; // 25 minutes in seconds
+const MODES = {
+  focus: 25 * 60,
+  shortBreak: 5 * 60,
+  longBreak: 15 * 60,
+};
+
 
 function Timer() {
-  const [timeLeft, setTimeLeft] = useState(FOCUS_TIME);
-  const [isRunning, setIsRunning] = useState(false);
+  const [mode, setMode] = useState("focus");
+const [timeLeft, setTimeLeft] = useState(MODES.focus);
+const [isRunning, setIsRunning] = useState(false);
+const [focusCount, setFocusCount] = useState(0);
+
 
   useEffect(() => {
-    if (!isRunning) return;
+  if (!isRunning) return;
 
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev === 0) {
-          clearInterval(interval);
-          setIsRunning(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  const interval = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev === 0) {
+        clearInterval(interval);
+        handleSessionEnd();
+        return prev;
+      }
+      return prev - 1;
+    });
+  }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isRunning]);
+  return () => clearInterval(interval);
+}, [isRunning]);
+
+const handleSessionEnd = () => {
+  setIsRunning(false);
+
+  if (mode === "focus") {
+    const newCount = focusCount + 1;
+    setFocusCount(newCount);
+
+    if (newCount % 4 === 0) {
+      switchMode("longBreak");
+    } else {
+      switchMode("shortBreak");
+    }
+  } else {
+    switchMode("focus");
+  }
+};
 
   const resetTimer = () => {
-    setIsRunning(false);
-    setTimeLeft(FOCUS_TIME);
-  };
+  setIsRunning(false);
+  setTimeLeft(MODES[mode]);
+};
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -34,9 +59,19 @@ function Timer() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const switchMode = (newMode) => {
+  setMode(newMode);
+  setTimeLeft(MODES[newMode]);
+};
+
   return (
     <div className="text-center space-y-4">
       <h2 className="text-2xl font-semibold">Pomodoro Timer</h2>
+<p className="uppercase tracking-wide text-gray-500">
+  {mode === "focus" && "Focus Time"}
+  {mode === "shortBreak" && "Short Break"}
+  {mode === "longBreak" && "Long Break"}
+</p>
 
       <div className="text-5xl font-bold">
         {formatTime(timeLeft)}
