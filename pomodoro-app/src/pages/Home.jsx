@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
+import Timer from "../components/Timer";
+import QuoteBox from "../components/QuoteBox";
 
 const MODES = {
   focus: 25 * 60,
@@ -100,6 +102,8 @@ function Home() {
           Welcome to your Pomodoro Session
         </h2>
 
+      <QuoteBox />
+
         {/* Add Task */}
         <div className="max-w-md mx-auto mb-6">
           <div className="flex gap-2 mb-4">
@@ -154,36 +158,14 @@ function Home() {
             : "No task selected"}
         </p>
 
-        {/* Timer */}
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-semibold">Pomodoro Timer</h2>
-          <p className="uppercase tracking-wide text-gray-500">
-            {mode === "focus" && "Focus Time"}
-            {mode === "shortBreak" && "Short Break"}
-            {mode === "longBreak" && "Long Break"}
-          </p>
-          <div className="text-5xl font-bold">{formatTime(timeLeft)}</div>
-          <div className="space-x-4">
-            <button
-              onClick={() => currentTaskIndex !== null && setIsRunning(true)}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Start
-            </button>
-            <button
-              onClick={() => setIsRunning(false)}
-              className="px-4 py-2 bg-yellow-500 text-white rounded"
-            >
-              Pause
-            </button>
-            <button
-              onClick={resetTimer}
-              className="px-4 py-2 bg-red-600 text-white rounded"
-            >
-              Reset
-            </button>
-          </div>
-        </div>
+        <Timer
+         mode={mode}
+         timeLeft={timeLeft}
+         onStart={() => currentTaskIndex !== null && setIsRunning(true)}
+         onPause={() => setIsRunning(false)}
+         onReset={resetTimer}
+         formatTime={formatTime}
+/>
       </main>
     </>
   );
