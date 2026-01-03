@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
-import Timer from "../components/Timer";
 import QuoteBox from "../components/QuoteBox";
+import CircularTimer from "../components/CircularTimer";
 
 const MODES = {
   focus: 25 * 60,
@@ -15,7 +15,7 @@ function Home() {
   const [currentTaskIndex, setCurrentTaskIndex] = useState(null);
   const [newTask, setNewTask] = useState("");
 
-  // Timer state
+  // Timer state (SINGLE SOURCE OF TRUTH)
   const [mode, setMode] = useState("focus");
   const [timeLeft, setTimeLeft] = useState(MODES.focus);
   const [isRunning, setIsRunning] = useState(false);
@@ -72,7 +72,7 @@ function Home() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Task functions
+  // Task logic
   const addTask = () => {
     if (!newTask.trim()) return;
     setTasks([...tasks, { text: newTask, completed: false }]);
@@ -97,15 +97,16 @@ function Home() {
   return (
     <>
       <Header />
-      <main className="p-6 text-center">
-        <h2 className="text-2xl font-bold mb-4">
+
+      <main className="p-6 text-center space-y-6">
+        <h2 className="text-2xl font-bold">
           Welcome to your Pomodoro Session
         </h2>
 
-      <QuoteBox />
+        <QuoteBox />
 
         {/* Add Task */}
-        <div className="max-w-md mx-auto mb-6">
+        <div className="max-w-md mx-auto">
           <div className="flex gap-2 mb-4">
             <input
               type="text"
@@ -152,19 +153,19 @@ function Home() {
         </div>
 
         {/* Current Task */}
-        <p className="mb-2 font-semibold">
+        <p className="font-semibold">
           {currentTaskIndex !== null
             ? `Working on: ${tasks[currentTaskIndex].text}`
             : "No task selected"}
         </p>
 
-        <Timer
-         mode={mode}
-         timeLeft={timeLeft}
-         onStart={() => currentTaskIndex !== null && setIsRunning(true)}
-         onPause={() => setIsRunning(false)}
-         onReset={resetTimer}
-         formatTime={formatTime}
+       <CircularTimer
+  timeLeft={timeLeft}
+  totalTime={MODES[mode]}
+  mode={mode}
+  onStart={() => currentTaskIndex !== null && setIsRunning(true)}
+  onPause={() => setIsRunning(false)}
+  onReset={resetTimer}
 />
       </main>
     </>
